@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generador de Ejercicios ED</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Generador de Ejercicios</h1>
+        <div class="controls">
+            <select id="tipo-ejercicio" class="selector">
+                <option value="tipo1">Tipo 1: y' + ay = be^(cx)</option>
+                <option value="tipo2">Tipo 2: y' + ay = a²x</option>
+                <option value="tipo3">Tipo 3: y' + ay = 2a·sin(ax)</option>
+            </select>
+            <button id="generar-btn" class="btn">Generar Ejercicio</button>
+            <button id="evaluar-btn" class="btn">Ir a Evaluación</button>
+        </div>
+        
+        <div id="ejercicio-container" class="ejercicio">
+            <h2 id="titulo-ejercicio"></h2>
+            <div id="enunciado" class="enunciado"></div>
+            <button id="mostrar-solucion" class="btn">Mostrar Solución</button>
+            <div id="solucion" class="solucion"></div>
+        </div>
+    </div>
+
+    <script src="js/config1.js" type="module"></script>
+    <script src="js/main.js" type="module"></script>
+</body>
+</html>
