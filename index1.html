@@ -7,6 +7,8 @@
     <link rel="stylesheet" href="css/style.css">
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.debug.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.5.0-beta4/html2canvas.min.js"></script>
 </head>
 <body>
     <div class="container">
@@ -14,7 +16,11 @@
         <div id="examen-container">
             <div id="preguntas-container"></div>
             <button id="calificar-btn" class="btn">Calificar Examen</button>
-            <div id="resultados" class="resultados"></div>
+            <div id="resultados" class="resultados">
+                  <h2>Resultados</h2>
+                  <div id="resultados-detalle"></div>
+                  <button id="generar-pdf" class="btn">Descargar Informe PDF</button>
+</div>
         </div>
     </div>
 
