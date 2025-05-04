@@ -3,7 +3,7 @@ import { CONFIG } from './config1.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
     const generadorExamen = new GeneradorExamenes(CONFIG);
-    const examen = generadorExamen.crearExamen();
+    const examen = await generadorExamen.crearExamen();
     
     mostrarPreguntas(examen);
     
@@ -11,37 +11,52 @@ document.addEventListener('DOMContentLoaded', async () => {
         const respuestas = obtenerRespuestasUsuario(examen);
         const resultado = generadorExamen.calificarExamen(examen, respuestas);
         mostrarResultados(resultado);
+        
+        // Nuevo: Evento para generar PDF
+        document.getElementById('generar-pdf').addEventListener('click', () => {
+            generadorExamen.generarInformePDF(resultado);
+        });
     });
 });
 
-function mostrarPreguntas(examen) {
-    const container = document.getElementById('preguntas-container');
+function mostrarResultados(resultado) {
+    const container = document.getElementById('resultados-detalle');
+    const porcentaje = resultado.porcentaje.toFixed(1);
     
-    examen.preguntas.forEach((pregunta, index) => {
-        const preguntaHTML = `
-            <div class="pregunta">
-                <h3>Pregunta ${index + 1}</h3>
-                <div class="enunciado">${pregunta.enunciado}</div>
-                <div class="opciones">
-                    ${generarOpciones(pregunta, index)}
-                </div>
+    let html = `
+        <div class="resumen">
+            <h3>Resumen: ${resultado.puntaje}/${resultado.resultados.length} (${porcentaje}%)</h3>
+            <p>${obtenerRetroalimentacionGeneral(porcentaje)}</p>
+        </div>
+    `;
+    
+    resultado.resultados.forEach((r, i) => {
+        html += `
+            <div class="resultado-pregunta ${r.correcta ? 'correcta' : 'incorrecta'}">
+                <h4>Pregunta ${i + 1}: ${r.correcta ? 'Correcta' : 'Incorrecta'}</h4>
+                <p>${r.pregunta}</p>
+                ${!r.correcta ? `
+                    <div class="retroalimentacion">
+                        <p><strong>Tu respuesta:</strong> ${r.respuestaUsuario}</p>
+                        <p><strong>Solución correcta:</strong></p>
+                        <ul>
+                            ${r.solucion.map(p => `<li>${p}</li>`).join('')}
+                        </ul>
+                    </div>
+                ` : ''}
             </div>
         `;
-        container.innerHTML += preguntaHTML;
     });
     
+    container.innerHTML = html;
+    document.getElementById('resultados').style.display = 'block';
     MathJax.typeset();
-}
+});
 
-function generarOpciones(pregunta, index) {
-    if (pregunta.tipo === 'opcion_multiple') {
-        return Object.entries(pregunta.opciones).map(([key, value]) => `
-            <label>
-                <input type="radio" name="pregunta-${index}" value="${key}">
-                ${value}
-            </label>
-        `).join('');
-    }
-    // Para otros tipos de preguntas
-    return `<input type="text" name="pregunta-${index}" placeholder="Ingrese su respuesta">`;
+function obtenerRetroalimentacionGeneral(porcentaje) {
+    const pct = parseFloat(porcentaje);
+    if (pct >= 90) return "¡Excelente trabajo! Dominas completamente los conceptos.";
+    if (pct >= 70) return "Buen trabajo, pero hay algunos conceptos que necesitas reforzar.";
+    if (pct >= 50) return "Has aprobado, pero te recomendamos revisar los temas nuevamente.";
+    return "Necesitas repasar los conceptos fundamentales. Te sugerimos practicar más ejercicios.";
 }
